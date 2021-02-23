@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { NotFound, Conflict } = require('../errors');
+const { NotFound } = require('../errors');
 
 const getUsers = (req, res) => {
   User.find({})
@@ -18,6 +18,17 @@ const getUser = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new NotFound('Нет пользователя с таким id');
+      }
+      return res.status(200).send({ data: user });
+    })
+    .catch(next);
+};
+
+const getUserInfo = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Нет такого пользователя');
       }
       return res.status(200).send({ data: user });
     })
@@ -66,5 +77,5 @@ const login = (req, res, next) => {
 };
 
 module.exports = {
-  getUsers, getUser, createUser, updateUser, updateAvatar, login,
+  getUsers, getUser, createUser, updateUser, updateAvatar, login, getUserInfo,
 };
