@@ -7,6 +7,7 @@ const controller = require('./controllers/users');
 const errorHandler = require('./middlewares/errorHandler');
 const registerValidator = require('./validators/register');
 const authValidator = require('./validators/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
@@ -21,10 +22,14 @@ const PORT = 3000;
 
 app.use(bodyParser.json());
 
+app.use(requestLogger);
+
 app.post('/sign-in', authValidator, controller.login);
 app.post('/sign-up', registerValidator, controller.createUser);
 
 app.use('/', router);
+
+app.use(errorLogger);
 
 app.use(errorHandler);
 
