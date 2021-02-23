@@ -24,6 +24,8 @@ app.use(bodyParser.json());
 
 app.use(requestLogger);
 
+app.use('/', express.static('public'));
+
 app.post('/sign-in', authValidator, controller.login);
 app.post('/sign-up', registerValidator, controller.createUser);
 
