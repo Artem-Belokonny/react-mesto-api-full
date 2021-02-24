@@ -8,6 +8,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const registerValidator = require('./validators/register');
 const authValidator = require('./validators/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const cors = require('cors');
 
 const app = express();
 
@@ -17,8 +18,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
-
-const cors = require('cors');
 
 const PORT = 3000;
 
