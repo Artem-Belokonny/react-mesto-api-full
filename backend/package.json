@@ -1,12 +1,13 @@
 {
   "name": "express-mesto",
   "version": "1.0.0",
-  "description": "Проектная работа № 13, Yandex.Praktikum",
+  "description": "Проектная работа № 15, Yandex.Praktikum",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "deploy": "npm run build && scp -r ./build/* volorel@84.201.137.51:/home/volorel/react-mesto-api-full/frontend/build"
   },
   "author": "Artem Belokonny, Yandex.Praktikum",
   "license": "ISC",
