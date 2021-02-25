@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { NotFound, Conflict, Unauthorized, BadRequest } = require('../errors');
+const {
+  NotFound, Conflict, Unauthorized, BadRequest,
+} = require('../errors');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -46,7 +48,7 @@ const createUser = (req, res, next) => {
     }))
     .then((user) => {
       if (!user) {
-        throw new Conflict('Нет такого пользователя');
+        throw new Conflict('Email уже используется');
       }
       return res.status(200).send(user);
     })
@@ -82,7 +84,7 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
-        throw new BadRequest('Произошла ошибка при отправке данных');
+        throw new Unauthorized('Не правильный email или пароль');
       }
       const token = jwt.sign({ _id: user._id }, 'secret', { expiresIn: '7d' });
       res.send({ token });

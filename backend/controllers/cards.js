@@ -1,81 +1,64 @@
 const mongoose = require('mongoose');
 const Card = require('../models/card');
+const { NotFound, Unauthorized, BadRequest } = require('../errors');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => {
-      res.send(cards);
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Нет карточки с таким id');
+      }
+      return res.status(200).send(user);
     })
-    .catch(() => {
-      res.status(404).send({ message: 'Нет карточки с таким id' });
-    });
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => res.send(card))
-    .catch(() => res.status(400).send({ message: 'Произошла ошибка при отправке данных' }));
+    .then((card) => {
+      if (!card) {
+        throw new BadRequest('Произошла ошибка при отправке данных');
+      }
+      return res.status(200).send(card);
+    })
+    .catch(next);
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
     .orFail(() => {
-      throw new Error('404');
+      throw new NotFound('Такой карточки не существует');
     })
-    .then((card) => res.send(card))
-    .catch((err) => {
-      if (err.message === '404') {
-        return res.status(404).send({ message: 'Такой карточки не существует' });
-      }
-      if (err instanceof mongoose.CastError) {
-        return res.status(400).send({ message: 'id карточки не найден' });
-      }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .then((card) => res.status(200).send(card))
+    .catch(next);
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .orFail(() => {
-      throw new Error('404');
+      throw new NotFound('Такой карточки не существует');
     })
-    .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.message === '404') {
-        return res.status(404).send({ message: 'Такой карточки не существует' });
-      }
-      if (err instanceof mongoose.CastError) {
-        return res.status(400).send({ message: 'id карточки не найден' });
-      }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .then((card) => res.status(200).send({ data: card }))
+    .catch(next);
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
   )
     .orFail(() => {
-      throw new Error('404');
+      throw new NotFound('Такой карточки не существует');
     })
-    .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.message === '404') {
-        return res.status(404).send({ message: 'Такой карточки не существует' });
-      }
-      if (err instanceof mongoose.CastError) {
-        return res.status(400).send({ message: 'id карточки не найден' });
-      }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .then((card) => res.status(200).send({ data: card }))
+    .catch(next);
 };
 
 module.exports = {
