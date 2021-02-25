@@ -23,7 +23,7 @@ const createCard = (req, res) => {
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
-      if (card.owner !== req.user._id) {
+      if (String(card.owner) !== String(req.user._id)) {
         throw new BadRequest('Карточка не удалена');
       }
       return Card.findByIdAndRemove(card._id)
