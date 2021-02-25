@@ -19,7 +19,7 @@ const getUser = (req, res, next) => {
       if (!user) {
         throw new NotFound('Нет пользователя с таким id');
       }
-      return res.status(200).send({ data: user });
+      return res.status(200).send(user);
     })
     .catch(next);
 };
@@ -30,7 +30,7 @@ const getUserInfo = (req, res, next) => {
       if (!user) {
         throw new NotFound('Нет такого пользователя');
       }
-      return res.status(200).send({ data: user });
+      return res.status(200).send(user);
     })
     .catch(next);
 };
@@ -43,7 +43,7 @@ const createUser = (req, res) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(400).send({ message: `${err}` });
@@ -55,14 +55,14 @@ const createUser = (req, res) => {
 const updateUser = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch(() => res.status(400).send({ message: 'Произошла ошибка при отправке данных' }));
 };
 
 const updateAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch(() => res.status(400).send({ message: 'Произошла ошибка при отправке данных' }));
 };
 
