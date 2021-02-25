@@ -1,16 +1,17 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { NotFound } = require('../errors');
+const { NotFound, Conflict, Unauthorized, BadRequest } = require('../errors');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => {
-      res.send(users);
+    .then((user) => {
+      if (!user) {
+        throw new Unauthorized('Доступ запрещен, необходимо авторизоваться');
+      }
+      return res.status(200).send(user);
     })
-    .catch(() => {
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch(next);
 };
 
 const getUser = (req, res, next) => {
@@ -35,7 +36,7 @@ const getUserInfo = (req, res, next) => {
     .catch(next);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, email,
   } = req.body;
@@ -43,33 +44,46 @@ const createUser = (req, res) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: `${err}` });
+    .then((user) => {
+      if (!user) {
+        throw new Conflict('Нет такого пользователя');
       }
-      return res.status(500).send({ message: err.message });
-    });
+      return res.status(200).send(user);
+    })
+    .catch(next);
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .then((user) => res.send(user))
-    .catch(() => res.status(400).send({ message: 'Произошла ошибка при отправке данных' }));
+    .then((user) => {
+      if (!user) {
+        throw new BadRequest('Произошла ошибка при отправке данных');
+      }
+      return res.status(200).send(user);
+    })
+    .catch(next);
 };
 
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .then((user) => res.send(user))
-    .catch(() => res.status(400).send({ message: 'Произошла ошибка при отправке данных' }));
+    .then((user) => {
+      if (!user) {
+        throw new BadRequest('Произошла ошибка при отправке данных');
+      }
+      return res.status(200).send(user);
+    })
+    .catch(next);
 };
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
+      if (!user) {
+        throw new BadRequest('Произошла ошибка при отправке данных');
+      }
       const token = jwt.sign({ _id: user._id }, 'secret', { expiresIn: '7d' });
       res.send({ token });
     })
