@@ -20,19 +20,20 @@ const createCard = (req, res) => {
     .catch(() => res.status(400).send({ message: 'Произошла ошибка при отправке данных' }));
 };
 
-const deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
-    .then((card) => {
-      if (String(card.owner) !== String(req.user._id)) {
-        throw new BadRequest('Карточка не удалена');
-      }
-      return Card.findByIdAndRemove(card._id)
-        .then(() => {
-          res.send({ message: 'delete' });
-        });
+const deleteCard = (req, res) => {
+  Card.findByIdAndRemove(req.params.cardId)
+    .orFail(() => {
+      throw new Error('404');
     })
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
-      next(err);
+      if (err.message === '404') {
+        return res.status(404).send({ message: 'Такой карточки не существует' });
+      }
+      if (err instanceof mongoose.CastError) {
+        return res.status(400).send({ message: 'id карточки не найден' });
+      }
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
