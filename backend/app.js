@@ -9,7 +9,6 @@ const registerValidator = require('./validators/register');
 const authValidator = require('./validators/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-
 const app = express();
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -21,11 +20,11 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 const PORT = 3000;
 
-app.use(cors());
-
 // app.use(bodyParser.json());
 
 app.use(requestLogger);
+
+app.use(cors());
 
 app.post('/sign-in', authValidator, controller.login);
 app.post('/sign-up', registerValidator, controller.createUser);
