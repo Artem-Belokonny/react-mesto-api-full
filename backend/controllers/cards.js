@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Card = require('../models/card');
-const { BadRequest } = require('../errors');
 
 const getCards = (req, res) => {
   Card.find({})
@@ -16,7 +15,7 @@ const createCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch(() => res.status(400).send({ message: 'Произошла ошибка при отправке данных' }));
 };
 
