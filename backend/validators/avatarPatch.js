@@ -3,7 +3,7 @@ const validator = require('validator');
 
 const avatarPatch = celebrate({
   body: {
-    avatat: Joi.string().required().custom((value, helper) => {
+    avatar: Joi.string().required().custom((value, helper) => {
       if (validator.isURL(value)) {
         return value;
       }
