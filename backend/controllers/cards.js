@@ -1,13 +1,11 @@
+const mongoose = require('mongoose');
 const Card = require('../models/card');
-const { NotFound, BadRequest } = require('../errors');
+const { NotFound } = require('../errors');
 
 const getCards = (req, res, next) => {
   Card.find({})
-    .then((user) => {
-      if (!user) {
-        throw new NotFound('Нет карточки с таким id');
-      }
-      return res.status(200).send(user);
+    .then((cards) => {
+      res.send(cards);
     })
     .catch(next);
 };
@@ -16,13 +14,13 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => {
-      if (!card) {
-        throw new BadRequest('Произошла ошибка при отправке данных');
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        res.status(400).send({ message: 'Необходимо указать ссылку на картинку' });
       }
-      return res.status(200).send(card);
-    })
-    .catch(next);
+      next(err);
+    });
 };
 
 const deleteCard = (req, res, next) => {
