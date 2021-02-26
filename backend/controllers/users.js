@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -24,7 +25,12 @@ const getUser = (req, res, next) => {
       }
       return res.status(200).send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof mongoose.CastError) {
+        res.status(400).send({ message: 'id пользователя не верно' });
+      }
+      next(err);
+    });
 };
 
 const getUserInfo = (req, res, next) => {
