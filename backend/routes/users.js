@@ -11,6 +11,6 @@ router.get('/:id', controller.getUser);
 router.patch('/me', userPatchValidator, controller.updateUser);
 router.patch('/me/avatar', avatarPatchValidator, controller.updateAvatar);
 router.post('/signin', authValidator, controller.login);
-router.post('/signin', registerValidator, controller.createUser);
+router.post('/signup', registerValidator, controller.createUser);
 
 module.exports = router;
