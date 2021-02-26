@@ -12,4 +12,5 @@
 
 **Ссылка на сайт**
 
-http://volorel-mesto.students.nomoreparties.space/
+URL: http://volorel-mesto.students.nomoreparties.space/
+Публичный IPv4: 84.201.137.51
