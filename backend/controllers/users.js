@@ -69,12 +69,8 @@ const createUser = (req, res, next) => {
     .then((password) => User.create({
       name, about, avatar, email, password,
     }))
-    .then(({
-      name, about, avatar, email,
-    }) => {
-      res.status(200).send({
-        name, about, avatar, email,
-      });
+    .then(({ _id, email }) => {
+      res.status(200).send({ _id, email });
     })
     .catch(next);
 };
