@@ -38,23 +38,6 @@ const getUserInfo = (req, res, next) => {
     .catch(next);
 };
 
-// const createUser = (req, res, next) => {
-//   const {
-//     name, about, avatar, email,
-//   } = req.body;
-//   bcrypt.hash(req.body.password, 10)
-//     .then((hash) => User.create({
-//       name, about, avatar, email, password: hash,
-//     }))
-//     .then((user) => {
-//       if (!user) {
-//         throw new Conflict('Email уже используется');
-//       }
-//       return res.status(200).send(user);
-//     })
-//     .catch(next);
-// };
-
 const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
