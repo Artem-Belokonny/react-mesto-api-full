@@ -61,7 +61,7 @@ const createUser = (req, res, next) => {
   } = req.body;
   User.findOne({ email })
     .then((user) => {
-      if (!user) {
+      if (user) {
         throw new Conflict('Email уже используется');
       }
       return bcrypt.hash(password, 10);
