@@ -10,7 +10,7 @@ router.get('/me', controller.getUserInfo);
 router.get('/:id', controller.getUser);
 router.patch('/me', userPatchValidator, controller.updateUser);
 router.patch('/me/avatar', avatarPatchValidator, controller.updateAvatar);
-router.post('/sign-in', authValidator, controller.login);
-router.post('/sign-in', registerValidator, controller.createUser);
+router.post('/signin', authValidator, controller.login);
+router.post('/signin', registerValidator, controller.createUser);
 
 module.exports = router;
