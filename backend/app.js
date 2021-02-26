@@ -32,9 +32,8 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-
-app.post('/sign-in', authValidator, controller.login);
-app.post('/sign-up', registerValidator, controller.createUser);
+app.post('/signin', authValidator, controller.login);
+app.post('/signup', registerValidator, controller.createUser);
 
 app.use('/', router);
 
