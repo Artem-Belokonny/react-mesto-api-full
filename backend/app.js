@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const router = require('./routes');
-const controller = require('./controllers/users');
+// const controller = require('./controllers/users');
 const errorHandler = require('./middlewares/errorHandler');
-const registerValidator = require('./validators/register');
-const authValidator = require('./validators/auth');
+// const registerValidator = require('./validators/register');
+// const authValidator = require('./validators/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
@@ -32,8 +32,8 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signin', authValidator, controller.login);
-app.post('/signup', registerValidator, controller.createUser);
+// app.post('/signin', authValidator, controller.login);
+// app.post('/signup', registerValidator, controller.createUser);
 
 app.use('/', router);
 
