@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Card = require('../models/card');
-const { NotFound } = require('../errors');
+const { NotFound, BadRequest } = require('../errors');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -24,12 +24,20 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .orFail(() => {
-      throw new NotFound('Такой карточки не существует');
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (String(card.owner) !== String(req.user._id)) {
+        console.log(card.owner, req.user._id, card._id);
+        throw new BadRequest('Карточка не удалена');
+      }
+      return Card.findByIdAndRemove(card._id)
+        .then(() => {
+          res.send({ message: 'Удалено' });
+        });
     })
-    .then((card) => res.status(200).send(card))
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };
 
 const likeCard = (req, res, next) => {
