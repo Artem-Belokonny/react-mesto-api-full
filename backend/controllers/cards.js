@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Card = require('../models/card');
-const { NotFound, BadRequest } = require('../errors');
+const { NotFound, BadRequest, Conflict } = require('../errors');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -30,7 +30,7 @@ const deleteCard = (req, res, next) => {
         throw new NotFound('Карточка не найдена');
       }
       if (String(card.owner) !== String(req.user._id)) {
-        throw new BadRequest('Нельзя удалять чужие фотографии');
+        throw new Conflict('Нельзя удалять чужие фотографии');
       }
       Card.findByIdAndRemove(card._id)
         .then(() => {
