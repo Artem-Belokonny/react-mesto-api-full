@@ -17,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && scp -r ./build/* volorel@84.201.138.85:/home/volorel/news-frontend"
+    "deploy": "npm run build && scp -r ./build/* volorel@84.201.137.51:/home/volorel/frontend/build"
   },
   "eslintConfig": {
     "extends": [
