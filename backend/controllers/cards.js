@@ -39,7 +39,8 @@ const deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequest('Ошибка в запросе клиента');
+        const error = new BadRequest('Ошибка в запросе клиента');
+        return next(error);
       }
       return next(err);
     });

@@ -26,8 +26,8 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        const er = new BadRequest('Ошибка в запросе клиента');
-        return next(er);
+        const error = new BadRequest('Ошибка в запросе клиента');
+        return next(error);
       }
       return next(err);
     });
