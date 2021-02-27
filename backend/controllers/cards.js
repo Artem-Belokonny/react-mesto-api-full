@@ -30,7 +30,7 @@ const deleteCard = (req, res, next) => {
         throw new NotFound('Карточка не найдена');
       }
       if (String(card.owner) !== String(req.user._id)) {
-        throw new BadRequest('Нельзя удалять чужик фотографии');
+        throw new BadRequest('Нельзя удалять чужие фотографии');
       }
       Card.findByIdAndRemove(card._id)
         .then(() => {
