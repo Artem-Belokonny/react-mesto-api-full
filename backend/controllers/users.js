@@ -18,7 +18,7 @@ const getUsers = (req, res, next) => {
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.params.id)
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         throw new NotFound('Нет пользователя с таким id');
@@ -26,10 +26,11 @@ const getUser = (req, res, next) => {
       return res.status(200).send(user);
     })
     .catch((err) => {
-      if (err instanceof mongoose.CastError) {
-        res.status(400).send({ message: 'id пользователя не верно' });
+      if (err.name === 'CastError') {
+        const er = new BadRequest('Ошибка в запросе клиента');
+        return next(er);
       }
-      next(err);
+      return next(err);
     });
 };
 
