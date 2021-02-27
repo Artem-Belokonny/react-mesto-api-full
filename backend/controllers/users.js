@@ -27,7 +27,7 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof mongoose.CastError) {
-        res.status(400).send({ message: 'id пользователя не верно' });
+        throw new BadRequest('id пользователя не верно!!!!!!!!');
       }
       next(err);
     });
