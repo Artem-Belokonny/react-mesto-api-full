@@ -26,16 +26,23 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
-      if (String(card.owner) !== String(req.user._id)) {
-        throw new BadRequest('Карточка не удалена');
+      if (!card) {
+        throw new NotFound('Карточка не найдена');
       }
-      return Card.findByIdAndRemove(card._id)
+      if (String(card.owner) !== String(req.user._id)) {
+        throw new BadRequest('Нельзя удалять чужик фотографии');
+      }
+      Card.findByIdAndRemove(card._id)
         .then(() => {
-          res.send({ message: 'Удалено' });
+          res.send({ message: 'Фотография удалена' });
         });
     })
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        const er = new BadRequest('Ошибка в запросе клиента');
+        return next(er);
+      }
+      return next(err);
     });
 };
 

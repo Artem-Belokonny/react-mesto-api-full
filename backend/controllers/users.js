@@ -27,7 +27,7 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        const er = new BadRequest('Запрос неправильно сформирован!!!!!@@@');
+        const er = new BadRequest('Ошибка в запросе клиента');
         return next(er);
       }
       return next(err);
