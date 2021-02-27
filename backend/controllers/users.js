@@ -26,7 +26,7 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        const error = new BadRequest('Ошибка в запросе клиента');
+        const error = new BadRequest('Передан неверный id пользователя');
         return next(error);
       }
       return next(err);
