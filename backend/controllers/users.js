@@ -26,10 +26,11 @@ const getUser = (req, res, next) => {
       return res.status(200).send(user);
     })
     .catch((err) => {
-      if (err instanceof mongoose.CastError) {
-        throw new BadRequest('id пользователя не верно!!!!!!!!');
+      if (err.name === 'CastError') {
+        const er = new BadRequest('Запрос неправильно сформирован!!!!!@@@');
+        return next(er);
       }
-      next(err);
+      return next(err);
     });
 };
 
