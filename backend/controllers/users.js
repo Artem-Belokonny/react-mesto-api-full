@@ -18,19 +18,18 @@ const getUsers = (req, res, next) => {
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.params.id)
     .then((user) => {
       if (!user) {
         throw new NotFound('Нет пользователя с таким id');
       }
-      res.send(user);
+      return res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        const er = new BadRequest('Ошибка в запросе клиента');
-        return next(er);
+      if (err instanceof mongoose.CastError) {
+        res.status(400).send({ message: 'id пользователя не верно' });
       }
-      return next(err);
+      next(err);
     });
 };
 
