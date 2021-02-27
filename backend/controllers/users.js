@@ -23,7 +23,7 @@ const getUser = (req, res, next) => {
       if (!user) {
         throw new NotFound('Нет пользователя с таким id');
       }
-      return res.status(200).send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
