@@ -17,7 +17,7 @@ const createCard = (req, res, next) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({ message: 'Необходимо указать ссылку на картинку' });
+        throw new BadRequest('Необходимо указать ссылку на картинку');
       }
       next(err);
     });
