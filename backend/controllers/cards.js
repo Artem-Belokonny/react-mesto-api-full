@@ -37,13 +37,7 @@ const deleteCard = (req, res, next) => {
           res.send({ message: 'Фотография удалена' });
         });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        const error = new BadRequest('Передан неверный id карточки');
-        return next(error);
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 const likeCard = (req, res, next) => {
@@ -56,13 +50,7 @@ const likeCard = (req, res, next) => {
       throw new NotFound('Такой карточки не существует');
     })
     .then((card) => res.status(200).send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        const error = new BadRequest('Передан неверный id карточки');
-        return next(error);
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 const dislikeCard = (req, res, next) => {
@@ -75,13 +63,7 @@ const dislikeCard = (req, res, next) => {
       throw new NotFound('Такой карточки не существует');
     })
     .then((card) => res.status(200).send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        const error = new BadRequest('Передан неверный id карточки');
-        return next(error);
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 module.exports = {

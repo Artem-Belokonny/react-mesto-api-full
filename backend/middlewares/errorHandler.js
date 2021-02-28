@@ -2,6 +2,9 @@ const { CelebrateError } = require('celebrate');
 
 const errorHandler = (err, req, res, next) => {
   if (err instanceof CelebrateError) {
+    if (err.details.has('params')) {
+      return res.status(400).send({ message: err.details.get('params').details[0].message });
+    }
     return res.status(400).send({ message: err.details.get('body').details[0].message });
   }
   if (err.status) {
