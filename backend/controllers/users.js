@@ -97,7 +97,13 @@ const updateAvatar = (req, res, next) => {
       }
       return res.status(200).send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        const error = new BadRequest('Передан неверный id пользователя');
+        return next(error);
+      }
+      return next(err);
+    });
 };
 
 const login = (req, res, next) => {
